@@ -579,7 +579,17 @@ function shareResponse() {
 
 </script>
 <script>
-async function generateAI() {
+async function generateAI() 
+function copyAIResponse() {
+    if (!window.lastAIResponse) {
+        return;
+    }
+
+    navigator.clipboard.writeText(window.lastAIResponse);
+
+    alert("Response copied! ✅");
+}
+{
     const input = document.querySelector("textarea");
 
     if (!input || !input.value.trim()) {
@@ -609,7 +619,26 @@ async function generateAI() {
             throw new Error(data.error || "Something went wrong");
         }
 
-        alert(data.reply);
+        const responseBox = document.getElementById("aiResponse");
+
+responseBox.style.display = "block";
+
+responseBox.innerHTML = `
+    <div class="ai-response-header">
+        🤖 AI Generated Response
+    </div>
+
+    <div class="ai-response-content">
+        ${data.reply.replace(/\n/g, "<br>")}
+    </div>
+
+    <div class="ai-response-actions">
+        <button onclick="copyAIResponse()">📋 Copy Response</button>
+        <button onclick="generateAI()">🔄 Regenerate</button>
+    </div>
+`;
+
+window.lastAIResponse = data.reply;
 
     } catch (error) {
         alert("AI Error: " + error.message);
@@ -619,5 +648,55 @@ async function generateAI() {
     button.innerText = "Generate";
 }
 </script>
+   <div id="aiResponse" style="
+    display:none;
+    margin:20px 0;
+    padding:20px;
+    border-radius:16px;
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    box-shadow:0 8px 25px rgba(0,0,0,0.08);
+">
+
+    <div class="ai-response-header" style="
+        font-size:18px;
+        font-weight:700;
+        margin-bottom:15px;
+    ">
+        🤖 AI Generated Response
+    </div>
+
+    <div class="ai-response-content" style="
+        line-height:1.7;
+        white-space:normal;
+    "></div>
+
+    <div class="ai-response-actions" style="
+        display:flex;
+        gap:10px;
+        margin-top:18px;
+        flex-wrap:wrap;
+    ">
+
+        <button onclick="copyAIResponse()" style="
+            padding:10px 16px;
+            border:0;
+            border-radius:10px;
+            cursor:pointer;
+        ">
+            📋 Copy Response
+        </button>
+
+        <button onclick="generateAI()" style="
+            padding:10px 16px;
+            border:0;
+            border-radius:10px;
+            cursor:pointer;
+        ">
+            🔄 Regenerate
+        </button>
+
+    </div>
+</div>
 </body>
 </html>
