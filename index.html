@@ -1,0 +1,583 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AI Business Assistant</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+    }
+
+    body {
+        background: #f4f7fb;
+        color: #172033;
+    }
+
+    header {
+        background: linear-gradient(135deg, #4f46e5, #7c3aed);
+        color: white;
+        padding: 25px 20px;
+        text-align: center;
+    }
+
+    header h1 {
+        font-size: 28px;
+        margin-bottom: 8px;
+    }
+
+    header p {
+        opacity: 0.9;
+    }
+
+    .container {
+        max-width: 1100px;
+        margin: auto;
+        padding: 25px 15px;
+    }
+
+    .welcome {
+        background: white;
+        border-radius: 18px;
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.07);
+    }
+
+    .welcome h2 {
+        margin-bottom: 8px;
+    }
+
+    .tools {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+
+    .tool {
+        background: white;
+        border: none;
+        border-radius: 16px;
+        padding: 22px;
+        text-align: left;
+        cursor: pointer;
+        box-shadow: 0 5px 18px rgba(0,0,0,0.06);
+        transition: 0.2s;
+    }
+
+    .tool:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+    }
+
+    .tool .icon {
+        font-size: 32px;
+        margin-bottom: 12px;
+    }
+
+    .tool h3 {
+        margin-bottom: 6px;
+    }
+
+    .tool p {
+        color: #687386;
+        font-size: 14px;
+    }
+
+    .assistant {
+        background: white;
+        padding: 25px;
+        border-radius: 18px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.07);
+    }
+
+    .assistant h2 {
+        margin-bottom: 18px;
+    }
+
+    label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+
+    textarea {
+        width: 100%;
+        min-height: 140px;
+        padding: 15px;
+        border: 1px solid #d5dbea;
+        border-radius: 12px;
+        resize: vertical;
+        font-size: 16px;
+        outline: none;
+    }
+
+    textarea:focus {
+        border-color: #6366f1;
+    }
+
+    .buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+        flex-wrap: wrap;
+    }
+
+    button {
+        border: none;
+        border-radius: 10px;
+        padding: 12px 18px;
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: bold;
+    }
+
+    .generate {
+        background: #4f46e5;
+        color: white;
+    }
+
+    .generate:hover {
+        background: #4338ca;
+    }
+
+    .clear {
+        background: #e9edf5;
+        color: #333;
+    }
+
+    .result {
+        margin-top: 25px;
+        padding: 20px;
+        background: #f8f9ff;
+        border-left: 5px solid #6366f1;
+        border-radius: 10px;
+        display: none;
+        white-space: pre-wrap;
+        line-height: 1.6;
+    }
+
+    .result-title {
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #4f46e5;
+    }
+
+    .history {
+        margin-top: 25px;
+        background: white;
+        border-radius: 18px;
+        padding: 25px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.07);
+    }
+
+    .history-item {
+        padding: 12px;
+        border-bottom: 1px solid #eee;
+        font-size: 14px;
+    }
+
+    .empty {
+        color: #777;
+        font-size: 14px;
+    }
+
+    footer {
+        text-align: center;
+        padding: 25px;
+        color: #777;
+        font-size: 14px;
+    }
+
+    @media(max-width:600px) {
+        header h1 {
+            font-size: 23px;
+        }
+
+        .container {
+            padding: 15px 10px;
+        }
+
+        .welcome,
+        .assistant,
+        .history {
+            padding: 18px;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>🤖 AI Business Assistant</h1>
+    <p>Your smart assistant for everyday business tasks</p>
+</header>
+
+<div class="container">
+
+    <div class="welcome">
+        <h2>Welcome 👋</h2>
+        <p>
+            Create customer replies, product descriptions,
+            social media captions and FAQs in seconds.
+        </p>
+    </div>
+
+    <div class="tools">
+
+        <button class="tool" onclick="selectTool('Customer Reply')">
+            <div class="icon">💬</div>
+            <h3>Customer Reply</h3>
+            <p>Generate professional replies to customers.</p>
+        </button>
+
+        <button class="tool" onclick="selectTool('Product Description')">
+            <div class="icon">📝</div>
+            <h3>Product Description</h3>
+            <p>Create attractive product descriptions.</p>
+        </button>
+
+        <button class="tool" onclick="selectTool('Social Media Caption')">
+            <div class="icon">📢</div>
+            <h3>Social Caption</h3>
+            <p>Create engaging social-media captions.</p>
+        </button>
+
+        <button class="tool" onclick="selectTool('FAQ Generator')">
+            <div class="icon">❓</div>
+            <h3>FAQ Generator</h3>
+            <p>Create useful FAQs for your business.</p>
+        </button>
+
+    </div>
+
+    <div class="assistant">
+
+        <h2>✨ AI Assistant</h2>
+
+        <label id="promptLabel">What do you need help with?</label>
+
+        <textarea
+            id="userInput"
+            placeholder="Example: A customer asked whether delivery is available..."
+        ></textarea>
+
+        <div class="buttons">
+            <button class="generate" onclick="generateResponse()">
+                ✨ Generate
+            </button>
+
+            <button class="clear" onclick="clearInput()">
+                Clear
+            </button>
+        </div>
+
+        <div class="result" id="result">
+            <div class="result-title">AI Response</div>
+            <div id="responseText"></div>
+
+            <div class="buttons">
+                <button class="clear" onclick="copyResponse()">
+                    📋 Copy
+                </button>
+
+                <button class="clear" onclick="shareResponse()">
+                    📤 Share
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="history">
+
+        <h2>🕘 History</h2>
+
+        <div id="historyList">
+            <p class="empty">
+                Your generated responses will appear here.
+            </p>
+        </div>
+
+    </div>
+
+</div>
+
+<footer>
+    AI Business Assistant © 2026
+</footer>
+
+<script>
+
+let selectedTool = "Customer Reply";
+
+let historyData = [];
+
+
+/* Select AI tool */
+
+function selectTool(tool) {
+
+    selectedTool = tool;
+
+    const label = document.getElementById("promptLabel");
+    const input = document.getElementById("userInput");
+
+    if (tool === "Customer Reply") {
+
+        label.innerText = "What should I reply to the customer?";
+
+        input.placeholder =
+            "Example: Customer asked if delivery is available...";
+
+    }
+
+    else if (tool === "Product Description") {
+
+        label.innerText = "Tell me about your product";
+
+        input.placeholder =
+            "Example: Premium wireless headphones with noise cancellation...";
+
+    }
+
+    else if (tool === "Social Media Caption") {
+
+        label.innerText = "What are you promoting?";
+
+        input.placeholder =
+            "Example: New summer collection launched today...";
+
+    }
+
+    else if (tool === "FAQ Generator") {
+
+        label.innerText = "Tell me about your business";
+
+        input.placeholder =
+            "Example: We sell handmade clothing and deliver across India...";
+
+    }
+
+}
+
+
+/* Generate demo response */
+
+function generateResponse() {
+
+    const input =
+        document.getElementById("userInput").value.trim();
+
+    const result =
+        document.getElementById("result");
+
+    const responseText =
+        document.getElementById("responseText");
+
+    if (!input) {
+
+        alert("Please enter some information first.");
+
+        return;
+    }
+
+    let response = "";
+
+    if (selectedTool === "Customer Reply") {
+
+        response =
+`Hello! 👋
+
+Thank you for reaching out to us.
+
+We'd be happy to help you with your request.
+
+${input}
+
+Please let us know if you have any other questions. We're always happy to assist you.
+
+Best regards,
+Our Business Team`;
+
+    }
+
+    else if (selectedTool === "Product Description") {
+
+        response =
+`✨ Product Description
+
+${input}
+
+Discover a product designed to provide excellent quality, reliability and value.
+
+⭐ Key Benefits:
+* High-quality product
+* Designed for everyday use
+* Reliable and convenient
+* Great value for customers
+
+📦 Order today and experience the difference!`;
+
+    }
+
+    else if (selectedTool === "Social Media Caption") {
+
+        response =
+`🚀 Something exciting is here!
+
+${input}
+
+✨ Quality you can trust
+🔥 Great value
+❤️ Made for our customers
+
+Don't miss out!
+
+#Business #NewProduct #SmallBusiness #Shopping #India`;
+
+    }
+
+    else if (selectedTool === "FAQ Generator") {
+
+        response =
+`Frequently Asked Questions
+
+1. What products/services do you offer?
+We provide quality products/services designed to meet our customers' needs.
+
+2. How can I place an order?
+You can contact our business team to place an order.
+
+3. Do you provide delivery?
+Please contact us with your location to check delivery availability.
+
+4. How can I contact you?
+You can contact our customer-support team for assistance.
+
+5. Do you accept custom requests?
+Please contact us to discuss your requirements.`;
+
+    }
+
+    responseText.innerText = response;
+
+    result.style.display = "block";
+
+    saveHistory(selectedTool, input, response);
+
+}
+
+
+/* Save history */
+
+function saveHistory(tool, input, response) {
+
+    historyData.unshift({
+
+        tool: tool,
+
+        input: input,
+
+        response: response
+
+    });
+
+    displayHistory();
+
+}
+
+
+/* Display history */
+
+function displayHistory() {
+
+    const historyList =
+        document.getElementById("historyList");
+
+    historyList.innerHTML = "";
+
+    historyData.forEach((item) => {
+
+        const div =
+            document.createElement("div");
+
+        div.className = "history-item";
+
+        div.innerHTML =
+            `<strong>${item.tool}</strong><br>
+             ${item.input.substring(0, 100)}...`;
+
+        historyList.appendChild(div);
+
+    });
+
+}
+
+
+/* Clear */
+
+function clearInput() {
+
+    document.getElementById("userInput").value = "";
+
+    document.getElementById("result").style.display = "none";
+
+}
+
+
+/* Copy response */
+
+function copyResponse() {
+
+    const text =
+        document.getElementById("responseText").innerText;
+
+    navigator.clipboard.writeText(text);
+
+    alert("Response copied!");
+
+}
+
+
+/* Share */
+
+function shareResponse() {
+
+    const text =
+        document.getElementById("responseText").innerText;
+
+    if (navigator.share) {
+
+        navigator.share({
+
+            title: "AI Business Assistant",
+
+            text: text
+
+        });
+
+    }
+
+    else {
+
+        navigator.clipboard.writeText(text);
+
+        alert("Response copied. You can paste it anywhere!");
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>
