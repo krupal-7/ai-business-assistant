@@ -5,15 +5,16 @@ const client = new OpenAI({
 });
 
 export default async function handler(req, res) {
-  // Allow your GitHub Pages website to call this API
   res.setHeader(
     "Access-Control-Allow-Origin",
     "https://krupal-7.github.io"
   );
+
   res.setHeader(
     "Access-Control-Allow-Headers",
     "Content-Type"
   );
+
   res.setHeader(
     "Access-Control-Allow-Methods",
     "POST, OPTIONS"
@@ -30,7 +31,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { message, task } = req.body || {};
+    const { message, task = "general" } = req.body || {};
 
     if (!message) {
       return res.status(400).json({
@@ -38,23 +39,43 @@ export default async function handler(req, res) {
       });
     }
 
+    const instructions = `
+You are BizAI, a professional AI Business Assistant.
+
+The selected task is: ${task}
+
+Follow the selected task EXACTLY.
+
+If the task is "customer-reply":
+Write a polite, professional customer-service response.
+Do NOT write a product description.
+
+If the task is "product-description":
+Write a professional, attractive product description.
+Include the product's important features, benefits, price if provided, and a clear call to action.
+Do NOT write a customer-service reply.
+
+If the task is "social-caption":
+Write an engaging social-media caption suitable for Instagram/Facebook.
+Include emojis only when appropriate and add relevant hashtags.
+
+If the task is "faq":
+Create clear frequently asked questions and answers for the business or product.
+
+If the task is "general":
+Act as a helpful business assistant.
+
+Important:
+- Follow the selected task.
+- Do not change the task type.
+- Do not add unnecessary greetings.
+- Do not say "Hello, thank you for reaching out" unless the selected task is customer-reply.
+- Be professional and concise.
+`;
+
     const response = await client.responses.create({
       model: "gpt-5-mini",
-      instructions: `
-You are an AI Business Assistant.
-
-Help small businesses with:
-- Customer replies
-- Product descriptions
-- Social media captions
-- FAQs
-- Marketing ideas
-- Business writing
-
-Be professional, useful, concise and easy to understand.
-
-Task type: ${task || "general business assistance"}
-      `,
+      instructions: instructions,
       input: message
     });
 
