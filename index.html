@@ -589,6 +589,44 @@ async function generateAI() {
 
     const message = input.value.trim();
 
+    // Detect the requested business task
+    let task = "general";
+
+    const lowerMessage = message.toLowerCase();
+
+    if (
+        lowerMessage.includes("product description") ||
+        lowerMessage.includes("describe this product") ||
+        lowerMessage.includes("write a description")
+    ) {
+        task = "product-description";
+    }
+
+    else if (
+        lowerMessage.includes("customer reply") ||
+        lowerMessage.includes("reply to customer") ||
+        lowerMessage.includes("customer asked") ||
+        lowerMessage.includes("customer says")
+    ) {
+        task = "customer-reply";
+    }
+
+    else if (
+        lowerMessage.includes("social media") ||
+        lowerMessage.includes("instagram caption") ||
+        lowerMessage.includes("facebook caption") ||
+        lowerMessage.includes("social caption")
+    ) {
+        task = "social-caption";
+    }
+
+    else if (
+        lowerMessage.includes("faq") ||
+        lowerMessage.includes("frequently asked")
+    ) {
+        task = "faq";
+    }
+
     const button = document.querySelector("button");
 
     button.disabled = true;
@@ -601,7 +639,8 @@ async function generateAI() {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                message: message
+                message: message,
+                task: task
             })
         });
 
@@ -613,11 +652,14 @@ async function generateAI() {
 
         window.lastAIResponse = data.reply;
 
-        const responseBox = document.getElementById("aiResponse");
+        const responseBox =
+            document.getElementById("aiResponse");
+
         const contentBox =
             responseBox.querySelector(".ai-response-content");
 
         contentBox.textContent = data.reply;
+
         responseBox.style.display = "block";
 
     } catch (error) {
@@ -626,6 +668,7 @@ async function generateAI() {
 
     button.disabled = false;
     button.innerText = "Generate";
+}
 } 
 function copyAIResponse() {
     if (!window.lastAIResponse) {
