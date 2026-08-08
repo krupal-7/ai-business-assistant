@@ -578,6 +578,46 @@ function shareResponse() {
 }
 
 </script>
+<script>
+async function generateAI() {
+    const input = document.querySelector("textarea");
 
+    if (!input || !input.value.trim()) {
+        alert("Please enter your question first.");
+        return;
+    }
+
+    const button = document.querySelector("button");
+
+    button.disabled = true;
+    button.innerText = "Generating...";
+
+    try {
+        const response = await fetch("/api/chat", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                message: input.value
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || "Something went wrong");
+        }
+
+        alert(data.reply);
+
+    } catch (error) {
+        alert("AI Error: " + error.message);
+    }
+
+    button.disabled = false;
+    button.innerText = "Generate";
+}
+</script>
 </body>
 </html>
