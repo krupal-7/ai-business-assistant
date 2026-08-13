@@ -579,97 +579,27 @@ function shareResponse() {
 
 </script>
 <script>
-async function generateAI() {
-    const input = document.querySelector("textarea");
+const response = await fetch(
+  "https://ai-business-assistant-pi.vercel.app/api/chat",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      message: input,
+      task: selectedTool
+    })
+  }
+);
 
-    if (!input || !input.value.trim()) {
-        alert("Please enter something first.");
-        return;
-    }
+const data = await response.json();
 
-    const message = input.value.trim();
-
-    // Detect the requested business task
-    let task = "general";
-
-    const lowerMessage = message.toLowerCase();
-
-    if (
-        lowerMessage.includes("product description") ||
-        lowerMessage.includes("describe this product") ||
-        lowerMessage.includes("write a description")
-    ) {
-        task = "product-description";
-    }
-
-    else if (
-        lowerMessage.includes("customer reply") ||
-        lowerMessage.includes("reply to customer") ||
-        lowerMessage.includes("customer asked") ||
-        lowerMessage.includes("customer says")
-    ) {
-        task = "customer-reply";
-    }
-
-    else if (
-        lowerMessage.includes("social media") ||
-        lowerMessage.includes("instagram caption") ||
-        lowerMessage.includes("facebook caption") ||
-        lowerMessage.includes("social caption")
-    ) {
-        task = "social-caption";
-    }
-
-    else if (
-        lowerMessage.includes("faq") ||
-        lowerMessage.includes("frequently asked")
-    ) {
-        task = "faq";
-    }
-
-    const button = document.querySelector("button");
-
-    button.disabled = true;
-    button.innerText = "Generating...";
-
-    try {
-        const response = await fetch("/api/chat", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                message: message,
-                task: task
-            })
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            throw new Error(data.error || "AI request failed");
-        }
-
-        window.lastAIResponse = data.reply;
-
-        const responseBox =
-            document.getElementById("aiResponse");
-
-        const contentBox =
-            responseBox.querySelector(".ai-response-content");
-
-        contentBox.textContent = data.reply;
-
-        responseBox.style.display = "block";
-
-    } catch (error) {
-        alert("AI Error: " + error.message);
-    }
-
-    button.disabled = false;
-    button.innerText = "Generate";
+if (!response.ok) {
+  throw new Error(data.error || "AI request failed");
 }
-} 
+
+const reply = data.reply;
 function copyAIResponse() {
     if (!window.lastAIResponse) {
         return;
