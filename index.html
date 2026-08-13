@@ -370,111 +370,6 @@ function selectTool(tool) {
 }
 
 
-/* Generate demo response */
-
-function generateResponse() {
-
-    const input =
-        document.getElementById("userInput").value.trim();
-
-    const result =
-        document.getElementById("result");
-
-    const responseText =
-        document.getElementById("responseText");
-
-    if (!input) {
-
-        alert("Please enter some information first.");
-
-        return;
-    }
-
-    let response = "";
-
-    if (selectedTool === "Customer Reply") {
-
-        response =
-`Hello! 👋
-
-Thank you for reaching out to us.
-
-We'd be happy to help you with your request.
-
-${input}
-
-Please let us know if you have any other questions. We're always happy to assist you.
-
-Best regards,
-Our Business Team`;
-
-    }
-
-    else if (selectedTool === "Product Description") {
-
-        response =
-`✨ Product Description
-
-${input}
-
-Discover a product designed to provide excellent quality, reliability and value.
-
-⭐ Key Benefits:
-* High-quality product
-* Designed for everyday use
-* Reliable and convenient
-* Great value for customers
-
-📦 Order today and experience the difference!`;
-
-    }
-
-    else if (selectedTool === "Social Media Caption") {
-
-        response =
-`🚀 Something exciting is here!
-
-${input}
-
-✨ Quality you can trust
-🔥 Great value
-❤️ Made for our customers
-
-Don't miss out!
-
-#Business #NewProduct #SmallBusiness #Shopping #India`;
-
-    }
-
-    else if (selectedTool === "FAQ Generator") {
-
-        response =
-`Frequently Asked Questions
-
-1. What products/services do you offer?
-We provide quality products/services designed to meet our customers' needs.
-
-2. How can I place an order?
-You can contact our business team to place an order.
-
-3. Do you provide delivery?
-Please contact us with your location to check delivery availability.
-
-4. How can I contact you?
-You can contact our customer-support team for assistance.
-
-5. Do you accept custom requests?
-Please contact us to discuss your requirements.`;
-
-    }
-
-    responseText.innerText = response;
-
-    result.style.display = "block";
-
-    saveHistory(selectedTool, input, response);
-
-}
 
 
 /* Save history */
@@ -573,13 +468,10 @@ function shareResponse() {
 
         alert("Response copied. You can paste it anywhere!");
 
-    }
-
-}
-
-</script>
+    } 
 <script>
-const response = await fetch(
+async function generateResponse(){
+   const response = await fetch(
   "https://ai-business-assistant-pi.vercel.app/api/chat",
   {
     method: "POST",
