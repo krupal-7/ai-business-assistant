@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>AI Business Assistant</title>
 
 <style>
@@ -82,7 +81,6 @@ header p {
 
 .tool:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
 }
 
 .tool.active {
@@ -123,11 +121,6 @@ textarea {
     line-height: 1.5;
 }
 
-textarea:focus {
-    border-color: #6366f1;
-    box-shadow: 0 0 0 3px rgba(99,102,241,0.1);
-}
-
 .buttons {
     display: flex;
     gap: 10px;
@@ -146,16 +139,11 @@ button {
 
 button:disabled {
     opacity: 0.6;
-    cursor: not-allowed;
 }
 
 .generate {
     background: #4f46e5;
     color: white;
-}
-
-.generate:hover:not(:disabled) {
-    background: #4338ca;
 }
 
 .clear {
@@ -192,10 +180,6 @@ button:disabled {
     line-height: 1.5;
 }
 
-.history-item:last-child {
-    border-bottom: none;
-}
-
 .history-tool {
     color: #4f46e5;
     font-weight: bold;
@@ -205,17 +189,6 @@ button:disabled {
 .empty {
     color: #777;
     font-size: 14px;
-}
-
-.loading {
-    color: #6366f1;
-    font-weight: bold;
-}
-
-.status {
-    margin-top: 12px;
-    font-size: 14px;
-    color: #6366f1;
 }
 
 footer {
@@ -245,5 +218,49 @@ footer {
     }
 }
 </style>
+</head>
 
-<!-- Browser
+<body>
+
+<header>
+    <h1>🤖 AI Business Assistant</h1>
+    <p>Your smart assistant for everyday business tasks</p>
+</header>
+
+<div class="container">
+
+    <div class="welcome">
+        <h2>Welcome 👋</h2>
+        <p>
+            Create customer replies, product descriptions,
+            social media captions and FAQs in seconds.
+        </p>
+    </div>
+
+    <div class="tools">
+
+        <button class="tool active"
+            onclick="selectTool('Customer Reply', this)">
+            <div class="icon">💬</div>
+            <h3>Customer Reply</h3>
+            <p>Generate professional replies to customers.</p>
+        </button>
+
+        <button class="tool"
+            onclick="selectTool('Product Description', this)">
+            <div class="icon">📝</div>
+            <h3>Product Description</h3>
+            <p>Create attractive product descriptions.</p>
+        </button>
+
+        <button class="tool"
+            onclick="selectTool('Social Media Caption', this)">
+            <div class="icon">📢</div>
+            <h3>Social Caption</h3>
+            <p>Create engaging social-media captions.</p>
+        </button>
+
+        <button class="tool"
+            onclick="selectTool('FAQ Generator', this)">
+            <div class="icon">❓</div>
+            <h3>FAQ Generator</h
